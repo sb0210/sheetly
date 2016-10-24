@@ -1,0 +1,449 @@
+<html>
+<head>
+      <!--Import Google Icon Font-->
+      <!--Import materialize.css-->
+      {% load staticfiles %}
+	<style>	
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  {% load static %}
+  src: local('Material Icons'), local('MaterialIcons-Regular'), url({% static "sheets/font/google/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2" %}) format('woff2');
+}
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+
+		</style>
+     <!--Import jQuery before materialize.js-->
+      <script type="text/javascript" src='{% static "sheets/js/jquery-2.1.1.min.js" %}'></script>
+      <script type="text/javascript" src='{% static "sheets/js/materialize.min.js" %}'></script>
+
+     <link type="text/css" rel="stylesheet" href='{% static "sheets/css/materialize.min.css" %}' media="screen,projection"/>
+      <!-- <link href='{% static "sheets/css/style.css" %}' type="text/css" rel="stylesheet" media="screen,projection"/> -->
+      <link type="text/css" rel="stylesheet" href='{% static "sheets/css/home_css.css" %}'  media="screen,projection"/>
+
+      <!--Let browser know website is optimized for mobile-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+      <title>
+      </title>
+  </head>
+
+<body  onload="display_tables(); javascript:GenerateMyTabs(tabs);$('title').html(doc.fields.doc_name);" >
+
+
+		<!-- <div class="parallax" width = "100%"><img src="4.jpg" alt="Unsplashed background img 1"></div> -->
+
+		<div class="logo"> 
+
+			<div class="header">
+				<div class="header_text">
+					<h1 class="header center text-lighten-2" style="color: #93C74B">Welcome to Sheetly</h1>
+        
+				 </div>
+				 <div class="row center" style="float: right; margin-top: 1%; margin-right:2%;">
+          			<a href="/signout/" id="download-button" class="btn-large waves-effect waves-light lighten-1">LOGOUT</a>
+        		</div>
+		</div>
+		<table width="100%" height="100%">
+			<tr>
+				<td width="20%" height="100%">
+					<div class="drawer">
+					 <div class="collection" style="margin-top: 30px">
+				        <a href="/profile/" class="collection-item" style="font-size: 20px; padding: 20px;">Profile</a>
+				        <a href="/home/my_docs/" class="collection-item" style="font-size: 20px;padding: 20px;">My Docs</a>
+				        <a href="/home/shared_docs/" class="collection-item" style="font-size: 20px;padding: 20px;">Shared Docs</a>
+				      </div>
+					 </div>
+				</td>
+				<td>
+					<div class="card" style="padding: 10px; margin-left: 20px; margin-right:20px" >
+						<p style="text-align: center" class="sheetname" id="current_sheet_name"></p>
+						<hr>
+			
+						<table style="width: 100%; align: right;">
+							<tr>
+								<td>
+									<div id="tab_table">
+
+									</div>
+								</td>
+								{% if permission == "edit" %}
+  								<td align="left">
+									<a class="btn-floating  waves-effect waves-light teal" id="opener" onclick="Addtab()"><i class="material-icons">add</i></a>
+								</td>
+								<td width="40%" align="right">
+								</td>
+								<td width="10%" align="right">
+								{% for share_person in share_users %}
+								<div class="chip">
+									{{share_person}}
+								</div>	
+								{% endfor %}
+								</td>
+								<td width="10%">
+									<p class="waves-effect waves-light btn" style="text-align: right" onclick="Shareform()" >  Share </p>								
+								</td>
+								{% endif %}
+							</tr>
+						</table>
+						<script >
+							console.log({{share_person}});
+						</script>	
+						{% if permission == "edit" %}
+						<div class="row">
+						<form id="add_a_column_form" action="{{ request.get_full_path}}add_column/" method="post" type="hidden">
+						{% csrf_token %}
+						<input type="hidden" class="sheet_number_class" name="sheet_number">
+						<input type="hidden" class="column_number" name="column_number">
+						</form>
+						<form id="add_a_row_form" action="{{ request.get_full_path}}add_row/" method="post" type="hidden">
+						{% csrf_token %}
+						<input type="hidden" class="sheet_number_class" name="sheet_number">
+						<input type="hidden" class="row_number" name="row_number">
+						</form>					
+						<form id="delete_sheet_form" action="{{ request.get_full_path}}delete_sheet/" method="post" type="hidden">
+						{% csrf_token %}
+						<input type="hidden" class="sheet_number_class" name="sheet_number">
+						</form>										
+						{% if sheet_len > 0 %}
+						<a class="waves-effect waves-light btn teal col s2" id="opener" onclick="add_a_column()">Add a Column</a>
+						<a class="waves-effect waves-light btn teal col s2" id="opener" onclick="add_a_row()">Add a Row</a>
+						<a class="waves-effect waves-light btn teal col s2" id="opener" onclick="delete_data()">Delete Data</a>
+						<a class="waves-effect waves-light btn teal col s2" id="opener" onclick="delete_sheet()">Delete Tab</a>
+						<!-- <a class="waves-effect waves-light btn teal col s2" id="opener" onclick="ImageForm()">Add Image</a> -->
+						{% endif %}
+						</div>
+						{% endif %}
+
+						<div>						
+							{% if permission == "edit" %}
+							<form id="delete_data_form" type="hidden" action="{{request.get_full_path}}delete_data/" method="post">
+							<input type="hidden" class="sheet_number_class" name="sheet_number" value="">
+							<input type="hidden" id="data_to_be_deleted" name="data" value="">
+							{% csrf_token %}
+							{% endif %}
+							<table id="myTable" class="highlight" border="1px">
+							</table>
+							{% if permission == "edit" %}
+							</form>
+							{% endif %}
+							{% if permission == "edit" %}
+							{% if sheet_len > 0 %}
+
+							<form id="table_form" action="{{doc.sign}}update_sheet/" type="hidden" method="post">
+							{% csrf_token %}
+							<input type="hidden" class="sheet_number_class" name="sheet_number" value="">
+							<input type="hidden" id="sheet_data_id" name="sheet_data" value="">
+							<input type="hidden" class="total_columns" name="total_columns" value="">
+							<input type="hidden" class="total_rows" name="total_rows" value="">
+							</form>
+						   <button class="waves-effect waves-light btn blue lighten-1" onclick="save()" >Save</button>
+						   {% endif %}
+						   {% endif %}
+						</div>
+					</div>	
+				</td>
+			</tr>
+			</table>
+		{% if request.session.err %}
+				<script type="text/javascript">
+					alert("{{request.session.err}}");
+				</script>			
+		{% endif %}
+		{% if permission == "edit" %}
+		
+		<div id="lightbox" class="card" align="center">
+          <form class="col s12" action="{{doc.sign}}create_sheet/" method="post" id="new_sheet_form">
+          {% csrf_token %}
+
+			<p style="text-align: center" class="sheetname"> Add Table</p>
+			  <div class="row">
+			      <div class="row">
+			        <div class="input-field col s6">
+			          <input placeholder="Table X" id="table_name" name="sheet_name" type="text" class="validate">
+			          <label for="table_name">Table Name</label>
+			        </div>
+			      </div>
+			      <div class="row">
+			        <div class="input-field col s6">
+			          <input placeholder="Rows" id="no_row" type="number" name="total_rows" class="validate">
+			          <label for="no_row">No of rows</label>
+			        </div>
+			        <div class="input-field col s6">
+			          <input placeholder="Columns" id="no_col" type="number" name="total_columns" class="validate">
+			          <label for="no_col">No of columns</label>
+			        </div>
+			      </div>  	
+			    				
+			  </div>
+			  <div align="center">
+			 	 <p class="waves-effect waves-light btn" style="text-align: center" onclick="$( '#new_sheet_form' ).submit();refreshtabs()">  Submit </p>
+			  </div>
+ 	      </form>
+		</div>
+
+		<div id="sharebox" class="card">
+			<p style="text-align: center" class="sheetname"> Share Sheet</p>
+			<div class="row">
+			    <form class="col s12" method="post" id="sharing_form" action="">
+			         {% csrf_token %}
+			      <div class="row">
+			        <div class="input-field col s6">
+			          <input placeholder="Person user name" id="share_name" name="person" type="text" class="validate">
+   			          <label for="share_name">Share With</label>
+   			       </div>   
+   			      </div>
+   			      <div class="row">
+				   <p>
+				      <input name="rights" type="radio" id="view_rights" value="view" />
+				      <label for="view_rights">Only View Rights</label>
+				    </p>
+				    <p>
+				      <input name="rights" type="radio" id="edit_rights" value="edit" />
+				      <label for="edit_rights">Both View and Edit Rights</label>
+				    </p>
+     			   </div>	
+			    </form>
+			    				
+			  </div>
+			  <div align="center">
+			 	 <p class="waves-effect waves-light btn" style="text-align: center" onclick="hideshareform();$('#sharing_form').submit()">  Share </p>
+			  </div>
+		</div>
+
+		<div id="imagebox" class="card">
+			<p style="text-align: center" class="upload_image">Add Image</p>
+			<div class="row">
+			    <form class="col s12" method="post" enctype="multipart/form-data" id="image_upload_form" action="">
+			         {% csrf_token %}
+			      <div class="row">
+			        <div class="input-field col s6 file-field">
+				      <div class="btn">
+				        <span>File</span>
+				        <input type="file" name="image">
+				      </div>
+				      <div class="file-path-wrapper">
+				        <input class="file-path validate" type="text">
+				      </div>
+         		    </div>   
+   			      </div>
+			    </form>
+			  </div>
+			  <div align="center">
+			 	 <p class="waves-effect waves-light btn" style="text-align: center" onclick="hideimageform();$('#image_upload_form').submit()">Upload Image</p>
+			  </div>
+		</div>
+
+		{% endif %}
+		      <script type="text/javascript">
+	var sheets=JSON.parse({{sheets_json|safe}});
+	var tabs = new Array();
+	tabs=JSON.parse({{sheets_json|safe}});
+	console.log(JSON.stringify(tabs));
+	var cells=[];
+	var doc=JSON.parse({{doc|safe}})[0];
+	console.log(JSON.stringify(sheets));
+	console.log("hasg");	
+	cells = [];
+	{% for cell in cells %}
+		cells[{{forloop.counter0}}]={{cell|safe}};
+	{% endfor %}
+	var cell_data={{data|safe}};
+	for (var i=0;i<cell_data.length;i++){
+		for (var j=0;j<cell_data[i].length;j++){
+			console.log(cell_data[i][j]);
+		}
+	}
+	// for(var i=0;i<cells.length;i++){
+	// 	for(var j=0;j<cells[i].length;j++){
+	// 		cells[i][j]=JSON.parse(cells[i][j]);
+	// 	}
+	// }
+	// {% for i in cells %}
+		// cells[{{forloop.counter0}}]=JSON.parse({{i|safe}});
+	// {% endfor %}	
+	var active_tab=0;
+	var pos_id;
+
+	function display_tables() {
+		if(sheets.length>0){
+			display_table(active_tab);
+			console.log(active_tab);
+		}
+	}
+	function display_table(id){	
+		pos_id=[];
+		$("#tabs"+active_tab.toString()).attr("class","waves-effect waves-light btn col s4");
+		$("#tabs"+id.toString()).attr("class","waves-effect waves-light btn-large col s4");
+		$("#current_sheet_name").html(sheets[id].fields.sheet_name);
+		console.log(sheets[id].fields.sheet_name);
+		active_tab=id;
+		var data="";
+		for(var i=-1;i<sheets[id].fields.total_rows;i++){
+			pos_id[i]=[];
+			data=data+'<tr class="data_rows">';
+			for(var j=-1;j<sheets[id].fields.total_columns;j++){
+				if(i==-1 || j==-1){
+					data=data+'<th style="border:1px solid;width:50;height:20" class="teal lighten-4 " id="cell_r'+i.toString()+'_c'+j.toString()+'" >';
+					data=data+'<div class ="table_cell" id="r'+i.toString()+'_c'+j.toString()+'">'+''+'</div>';
+				}
+				else{
+					data=data+"<td style='border:1px solid;width:50;height:20'  id='cell_r"+i.toString()+"_c"+j.toString()+"'  >";	
+					{% if permission == "edit" %}
+
+					data=data+'<div class ="table_cell" id="r'+i.toString()+'_c'+j.toString()+'" contenteditable="true">'+''+'</div>';
+					
+					{% else %}
+					data=data+'<div class ="table_cell" id="r'+i.toString()+'_c'+j.toString()+'" >'+''+'</div>';
+					{% endif %}
+				}
+				if(i==-1 || j==-1){
+
+					data=data+'</th>';
+				}
+				else{
+					data=data+'</td>';
+				}
+				pos_id[i][j]={};
+			}
+			data=data+'</tr>';				
+		}
+		document.getElementById("myTable").innerHTML=data;
+		console.log("cell length" + cells[id].length);
+		for(var i=0;i<cells[id].length;i++){
+			var cell_html_id='r'+cells[id][i].fields.cell_y.toString()+'_c'+cells[id][i].fields.cell_x.toString();
+			var cell_html = document.getElementById(cell_html_id);
+			console.log(id);
+			console.log(i);
+			cell_html.innerHTML=cell_data[id][i].text_data;
+			pos_id[cells[id][i].fields.cell_y][cells[id][i].fields.cell_x]=cells[id][i].pk;
+		}
+		for(var i=0;i<sheets[id].fields.total_columns;i++){
+			var cell_html_id='r-1_c'+i.toString();
+			var cell_html = document.getElementById(cell_html_id);
+			{% if permission == "edit" %}
+			cell_html.innerHTML='<input type="radio" name="selected_columns" value="'+i.toString()+'" id="'+'cr-1_c'+i.toString()+'" class="filled-in" /><label for="'+'cr-1_c'+i.toString()+'">'+toLetters(i+1)+'</label>';
+			{% else %}
+			cell_html.innerHTML='<label ">'+toLetters(i+1)+'</label>';
+			{% endif %}
+		}
+		for(var i=0;i<sheets[id].fields.total_rows;i++){
+			var cell_html_id='r'+i.toString()+'_c-1';
+			var cell_html = document.getElementById(cell_html_id);
+			{% if permission == "edit" %}
+			cell_html.innerHTML='<input type="radio" name="selected_rows" value="'+i.toString()+'"  id="'+'rr'+i.toString()+'_c-1'+'" class="filled-in" /><label for="'+'rr'+i.toString()+'_c-1'+'">'+(i+1).toString()+'</label>';
+			{% else %}
+			cell_html.innerHTML='<label ">'+(i+1).toString()+'</label>';
+			{% endif %}
+		}
+		$('.table_cell').attr("style","width:"+($('#myTable').width()/(sheets[id].fields.total_columns+1)).toString());
+		
+		{% if permission == "edit" %}
+		$(".sheet_number_class").attr("value",sheets[id].pk);	
+		$(".total_columns").attr("value",sheets[id].fields.total_columns);
+		$(".total_rows").attr("value",sheets[id].fields.total_rows);
+		$("#sharing_form").attr("action","/home/docs/{{sign}}/sharing/");
+		$("#image_upload_form").attr("action","/home/docs/{{sign}}/upload_image/");
+
+		{% endif %}
+	}
+	
+	function toLetters(num) {
+	    "use strict";
+	    var mod = num % 26,
+	        pow = num / 26 | 0,
+	        out = mod ? String.fromCharCode(64 + mod) : (--pow, 'Z');
+	    return pow ? toLetters(pow) + out : out;
+	}
+
+	{% if permission == "edit" %}
+	function delete_data () {
+
+		var json_object = JSON.stringify(pos_id);
+		$("#data_to_be_deleted").attr("value",json_object);
+		$('#delete_data_form').submit();
+	}
+	function save(){
+		
+		var elementTable =  document.getElementById("myTable");
+		console.log(elementTable.innerHTML);
+		var jObject = [];
+		console.log(JSON.stringify(pos_id));
+		for(var i=1;i<elementTable.rows.length;i++){
+			jObject[i-1]=[];
+			for(var j=1;j<elementTable.rows[i].cells.length;j++){
+				jObject[i-1][j-1]={};
+				// console.log(elementTable.rows[i].cells[j])
+				jObject[i-1][j-1].data=document.getElementById('r'+(i-1).toString()+'_c'+(j-1).toString()).innerHTML;
+				jObject[i-1][j-1].id=pos_id[i-1][j-1];
+			}
+		}
+		var json_object = JSON.stringify(jObject);
+		console.log(json_object);	
+
+		var form=document.getElementById("table_form");
+		var inp1 = document.getElementById("sheet_data_id");
+		inp1.setAttribute("value",json_object);	
+		$(".sheet_number_class").attr("value",active_tab);
+		$('.total_columns').attr("value",sheets[active_tab].fields.total_columns);	
+		$('.total_rows').attr("value",sheets[active_tab].fields.total_rows);	
+		form.submit();
+	} 
+
+	function add_a_column(){
+		sheets[active_tab].fields.total_columns=sheets[active_tab].fields.total_columns+1;
+		var new_empty_array = new Array();
+		for(var i=0;i<sheets[active_tab].fields.total_rows;i++){
+			new_empty_array[i]="";
+		}
+		cells[active_tab].concat(new_empty_array);
+		display_tables();
+		$("#add_a_column_form").submit();
+
+	}
+
+	function add_a_row () {
+		sheets[active_tab].fields.total_rows=sheets[active_tab].fields.total_rows+1;
+		var new_empty_array = new Array();
+		for(var i=0;i<sheets[active_tab].fields.total_columns;i++){
+			new_empty_array[i]="";
+		}
+		cells[active_tab].concat(new_empty_array);
+		display_tables();
+		$("#add_a_row_form").submit();
+	}
+	function delete_data(){
+		if ($("input[type=radio]:checked").length > 0) {
+    			$('#delete_data_form').submit();// Do your stuff here
+		}
+		else{
+			alert("Nothing selected");
+		}
+	}
+	function delete_sheet(){
+		$('#delete_sheet_form').submit()
+	}
+	{% endif %}
+
+</script>
+
+     <script type="text/javascript" src='{% static "sheets/js/my_js.js" %}'></script>
+
+</body>
+</html>

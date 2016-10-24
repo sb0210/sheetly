@@ -1,0 +1,126 @@
+body {
+    background: #E6E6FA;
+    background-size: cover;
+    font-family: Montserrat;
+    width: 100%;
+    margin:0;
+    padding:0;
+
+}
+
+.logo {
+    width: 100%;
+    height: 500px;
+    position: absolute;
+    background: url('6.jpg');
+    background-size:cover;
+    min-width:100%;
+ 
+
+}
+.header {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(100, 100, 100, 0);
+    min-width:100%;
+}
+
+.header_text{
+	font-family: RobotoDraft,Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;
+	font-weight: 300;
+	font-size: 60px;
+	margin-left: 30%;
+	margin-top: 15%;
+	position:absolute;
+	color: white;
+}
+
+.logout{
+	margin-right: 2%;
+	margin-top: 1%;
+	border-color: white;
+	border: 2px solid;
+	border-radius: 5px;
+	padding: 10px;
+	float: right;
+	color:  white;
+	font-size: 22px;
+}
+
+
+.drawer{
+	width: 100%;
+	height: 100%;
+	padding: 0px;
+	margin-top: -28px;
+	background-color: white;
+	box-shadow: 10px 10px 5px #bbbbbb;
+	text-align: left;
+	font-size: 30px;
+	color: rgba(50, 50, 50, 1);
+	font-weight: bold;
+}
+
+
+.sheet{
+	width: 95%;
+	height: 90%;
+	padding: 20px;
+	margin-left: 2%;
+	margin-top: -35px;
+	background-color: white;
+	box-shadow: 10px 10px 5px #bbbbbb;
+}
+
+
+.sheetname{
+	font-family: RobotoDraft,Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;
+	font-size: 30px;
+
+}
+
+#lightbox{
+    visibility:hidden;
+    position:absolute;
+    z-index:100;
+    width: 40%;
+    padding:20px;
+}
+
+#imagebox{
+    visibility:hidden;
+    position:absolute;
+    z-index:100;
+    width: 40%;
+    padding:20px;
+}
+
+#sharebox{
+    visibility:hidden;
+    position:absolute;
+    z-index:100;
+    width: 40%;
+    padding:20px;
+}
+
+
+
+.dimmer{
+    background: #000;
+    position: absolute;
+    opacity: .5;
+    top: 0;
+    z-index:99;
+}
+
+
+.backcover {
+    width: 100%;
+    height: 120%;
+    position: absolute;
+    background: url('6.jpg');
+    background-size:cover;
+    min-width:100%;
+ 
+
+}

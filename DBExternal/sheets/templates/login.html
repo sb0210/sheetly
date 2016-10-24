@@ -1,0 +1,67 @@
+
+{% load staticfiles %}
+<link href='{% static "sheets/css/main_css.css" %}' rel='stylesheet' type='text/css'>
+ <link type="text/css" rel="stylesheet" href='{% static "sheets/css/materialize.min.css" %}' media="screen,projection"/>
+      <link type="text/css" rel="stylesheet" href='{% static "sheets/css/home_css.css" %}'  media="screen,projection"/>
+     <script type="text/javascript" src='{% static "sheets/js/my_js.js" %}'></script>
+     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+      <script type="text/javascript" src='{% static "sheets/js/materialize.min.js" %}'></script>
+<div class="backcover">
+<div align="center" style="height: 15%">
+					<h1 class="header center text-lighten-2" style="color: #93C74B">Welcome to Sheetly</h1>
+</div>
+		{% if error == "Wrong Credentials" %}
+				<script type="text/javascript">
+					alert("Wrong Credentials");
+				</script>
+		{% endif %}
+		{% if error == "Username Already taken" %}
+				<script type="text/javascript">
+					alert("Username Already taken");
+				</script>
+		{% endif %}
+
+<table align="center" style="width: 70%">
+	<tr>
+		<td style="width: 40%" >
+			<div class="card" >
+			    <h1 class="sheetname" style="text-align: center">Sign In</h1>
+			    <form method="post" action="/signin/" class="col s12">
+			    {% csrf_token %}
+			    <div class="row">
+			    	<div class="input-field col s12">
+			    		<input type="text" value="" placeholder="Username" id="username" name="username"/>
+			    		<input type="password" value="" placeholder="Password" id="password" name="password"/>
+			    	</div>
+			    </div>
+			    <div align="center">
+				  <button class="btn-large waves-effect waves-light lighten-1">Sign In</button>
+				  </div>
+			    </form>
+			</div>
+		</td>
+		<td>
+	
+		</td>
+		<td style="padding: 50px">
+			<div class="card" style="padding: 10px">
+			    <h1 class="sheetname" style="text-align: center">Sign Up</h1>
+			    <form method="POST" action="/signup/" class="col s12">
+			    {% csrf_token %}
+			    <div class="row">
+			    	<div class="input-field col s12">
+					    <input type="text" value="" placeholder="Username" id="username" name="username" maxlength="15"/>
+					    <input type="password" value="" placeholder="Password" id="password" name="password" pattern=".{0}|.{8,}"   required title="8 chars minimum"/>
+					    <input type="text" value="" placeholder="Full Name" id="username" name="name" />
+					    <input type="email" value="" placeholder="Email" id="username" name="email_id" />
+					</div>
+				</div>
+				<div align="center">
+					<button class="btn-large waves-effect waves-light lighten-1">Sign Up</button>
+			    </div>
+			    </form>
+			</div>
+		</td>
+	</tr>
+</table>				
+</div>

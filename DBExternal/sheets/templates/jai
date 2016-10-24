@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{{doc.doc_name}}</title>
+</head>
+<body>
+
+{% if user.is_authenticated %}
+ <p> Yo {{ user.first_name }} </p>
+{% else %}
+<p> get lost</p>
+{% endif %} 
+<a href="/signout/"> logout</a>
+
+
+<ul>
+
+<li>{{doc.doc_id}} {{doc.doc_name}} {{doc.created_on}} {{doc.created_by}} <a href={{doc.sign}}>{{doc.sign}}</a></li>
+</ul>
+
+<form action="{{doc.sign}}create_sheet/" method="post">
+{% csrf_token %}
+<input name="sheet_name" placeholder="sheet_name" type="text">
+<input name="total_columns" placeholder="total_columns" type="text">
+<input name="total_rows" placeholder="total_rows" type="text">
+<input type="submit">
+</form>
+
+<u>
+{% for sheet in sheets  %}
+	<li>
+		<button onclick="display_table({{forloop.counter0}})">{{sheet.sheet_id}}  {{sheet.sheet_name}}   {{sheet.total_rows}}  {{sheet.total_columns}}  {{sheet.sheet_last_modified}}  {{sheet.sheet_created_on}}
+		</button>
+	</li>
+{% endfor %}	
+</u>
+
+<div id="table_data">
+<table id="myTable" border="1px">
+</table>
+	<form id="table_form" action="{{doc.sign}}update_sheet/" type="hidden" method="post">
+	{% csrf_token %}
+	<input type="hidden" id="sheet_number_id" name="sheet_number" value="">
+	<input type="hidden" id="sheet_data_id" name="sheet_data" value="">
+	</form>
+   <button onclick="save()" >Save</button>
+</div>
+
+<script >
+
+	var total_sheets={{sheets|length}};
+	var sheets=JSON.parse({{sheets_json|safe}});
+	// console.log(JSON.stringify(sheets));
+	// console.log(JSON.stringify(cells));
+	var cells=[];
+	{% for i in cells %}
+		cells[{{forloop.counter0}}]=JSON.parse({{i|safe}});
+		console.log(cells[{{forloop.counter0}}].length);
+	{% endfor %}	
+	console.log(cells.length);
+
+	var cur_sheet=0;
+	var pos_id = [];
+	function display_table(id){
+		pos_id=[];
+		cur_sheet=id;
+		var data="";
+		for(var i=0;i<sheets[id].fields.total_rows;i++){
+			pos_id[i]=[];
+			data=data+'<tr>';
+			for(var j=0;j<sheets[id].fields.total_columns;j++){
+				data=data+"<td style='border:1px solid;width:50;height:20'>";
+				data=data+'<div id="r'+i.toString()+'_c'+j.toString()+'" style="width:100px" contenteditable="true">'+''+'</div>';
+				data=data+'</td>';
+				pos_id[i][j]={};
+			}
+			data=data+'</tr>';
+		}
+		document.getElementById("myTable").innerHTML=data;
+		for(var i=0;i<cells[id].length;i++){
+			var cell_html_id='r'+cells[id][i].fields.cell_y.toString()+'_c'+cells[id][i].fields.cell_x.toString();
+			var cell_html = document.getElementById(cell_html_id);
+			console.log(cell_html_id);
+			cell_html.innerHTML=cells[id][i].fields.cell_color.toString();
+			pos_id[cells[id][i].fields.cell_y][cells[id][i].fields.cell_x]=cells[id][i].pk;
+		}
+
+	}
+
+
+	function save(){
+		
+		var elementTable =  document.getElementById("myTable");
+
+		var jObject = [];
+
+		for(var i=0;i<elementTable.rows.length;i++){
+			jObject[i]=[];
+			for(var j=0;j<elementTable.rows[i].cells.length;j++){
+				jObject[i][j]={};
+				jObject[i][j].data=elementTable.rows[i].cells[j].innerHTML;
+				jObject[i][j].id=pos_id[i][j];
+			}
+		}
+		var json_object = JSON.stringify(jObject);
+		console.log(json_object);
+
+		var form=document.getElementById("table_form");
+		var inp1 = document.getElementById("sheet_data_id");
+		inp1.setAttribute("value",json_object);	
+		var inp2 = document.getElementById("sheet_number_id");
+		inp2.setAttribute("value",cur_sheet);	
+
+		form.submit();
+		// var TableData;
+		// TableData = $.toJSON(jObject);
+		// $.ajax({
+		// 	type:"POST",
+		// 	url="{{doc.sign}}update_sheet",
+		// 	data:"table="+TableData,
+		// 	success:function(msg){
+		// 		console.log(msg);
+		// 	}
+		// // });
+		// var method="post";
+		// var url = "{{doc.sign}}update_sheet/";
+		// var form = document.createElement("form");
+		// form.setAttribute("method",method);
+		// form.setAttribute("action",url);
+
+		// params = {'table':JSON.stringify(jObject)};
+
+		// for(var key in params){
+		// 	if(params.hasOwnProperty(key)){
+		// 		var hiddenField = document.createElement("input");
+		// 		hiddenField.setAttribute("type","hidden");
+		// 		hiddenField.setAttribute("name",key);
+		// 		hiddenField.setAttribute("value",params[key]);
+
+		// 		form.appendChild(hiddenField);
+		// 	}
+		// }
+		// document.body.appendChild(form);
+	}
+
+</script>
+</body>
+</html>
+

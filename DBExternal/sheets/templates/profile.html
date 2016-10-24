@@ -1,0 +1,145 @@
+<html>
+<head>
+      <!--Import Google Icon Font-->
+      <!--Import materialize.css-->
+      {% load staticfiles %}
+	<style>	
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  {% load static %}
+  src: local('Material Icons'), local('MaterialIcons-Regular'), url({% static "sheets/font/google/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2" %}) format('woff2');
+}
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+		</style>
+     <!--Import jQuery before materialize.js-->
+      <script type="text/javascript" src='{% static "sheets/js/jquery-2.1.1.min.js" %}'></script>
+      <script type="text/javascript" src='{% static "sheets/js/materialize.min.js" %}'></script>
+
+     <link type="text/css" rel="stylesheet" href='{% static "sheets/css/materialize.min.css" %}' media="screen,projection"/>
+      <!-- <link href='{% static "sheets/css/style.css" %}' type="text/css" rel="stylesheet" media="screen,projection"/> -->
+      <link type="text/css" rel="stylesheet" href='{% static "sheets/css/home_css.css" %}'  media="screen,projection"/>
+
+      <!--Let browser know website is optimized for mobile-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+      <title>
+      </title>
+  </head>
+
+<body  onload="display_tables(); javascript:GenerateMyTabs(tabs);$('title').html(doc.fields.doc_name);" >
+
+
+		<!-- <div class="parallax" width = "100%"><img src="4.jpg" alt="Unsplashed background img 1"></div> -->
+
+		<div class="parallax" width = "100%"><img src="{%static 'sheets/css/6.jpg' %}" alt="Unsplashed background img 1"></div>
+
+		<div class="logo"> 
+
+			<div class="header">
+				<div class="header_text">
+					<h1 class="header center text-lighten-2" style="color: #93C74B">Welcome to Sheetly</h1>
+        
+				 </div>
+				 <div class="row center" style="float: right; margin-top: 1%; margin-right:2%;">
+          			<a href="/signout/" id="download-button" class="btn-large waves-effect waves-light lighten-1">LOGOUT</a>
+        		</div>
+		</div>
+		<table width="100%" height="100%">
+			<tr>
+				<td width="20%" height="100%">
+					<div class="drawer">
+					 <div class="collection" style="margin-top: 30px">
+				        <a href="/profile/" class="collection-item" style="font-size: 20px; padding: 20px;">Profile</a>
+				        <a href="/home/my_docs/" class="collection-item" style="font-size: 20px;padding: 20px;">My Docs</a>
+				        <a href="/home/shared_docs/" class="collection-item" style="font-size: 20px;padding: 20px;">Shared Docs</a>
+				      </div>
+					 </div>
+				</td>
+				<td>
+					<div class="card" style="padding: 10px; margin-left: 20px; margin-right:20px" >
+						<p style="text-align: right" class="waves-effect waves-light btn" id="current_sheet_name" onclick="edit_details()"> Edit</p>
+						<ul>
+							<div class="row">
+								<div class="col s6"><b>Name</b></div>
+								<div class="col s6">{{User.name}}</div>
+							</div>	
+							<div class="row">
+								<div class="col s6"><b>User Name</b></div>
+								<div class="col s6">{{User.username}}</div>
+							</div>	
+							<div class="row">
+								<div class="col s6"><b>Email</b></div>
+								<div class="col s6">{{User.email_id}}</div>
+							</div>	
+						
+					</div>	
+				</td>
+			</tr>
+			</table>
+
+			<div id="lightbox" class="card">
+			<p style="text-align: center" class="sheetname"> Edit Details</p>
+			<div class="row">
+			    <form class="col s12" method="post" id="edit_form" action="{{request.get_full_path}}edit_data/">
+			         {% csrf_token %}
+			      <div class="row">
+			        <div class="input-field col s12">
+			          <input placeholder="Full Name" id="full_name" name="person" type="text" class="validate">
+   			          <label for="full_name">Full Name</label>
+			          <input  type="email" placeholder="E-mail" id="e-mail" name="mail" >
+   			       </div>   
+   			      </div>
+   			      <div align="center">
+			 	 	<button class="waves-effect waves-light btn" style="text-align: center"> Save </p>
+			  
+			  		</div>	
+			    </form>
+			    				
+			  </div>
+			  
+		</div>
+     <script type="text/javascript" src='{% static "sheets/js/my_js.js" %}'></script>
+     <script type="text/javascript">
+     	function edit_details(){
+			var lightbox = document.getElementById("lightbox");
+		    var dimmer = document.createElement("div");
+			dimmer.style.width =  window.innerWidth + 'px';
+			dimmer.style.height = "200%";
+			dimmer.className = 'dimmer';
+			dimmer.id = "dimmer1";
+
+			dimmer.onclick = function(){
+		    	document.body.removeChild(this);   
+		    	lightbox.style.visibility = 'hidden';
+			}
+
+			document.body.appendChild(dimmer);
+			$('html, body').animate({scrollTop:0}, 'slow');
+		    lightbox.style.visibility = 'visible';
+		    lightbox.style.top = window.innerHeight/3 - 50 + 'px';
+		    lightbox.style.left = "30%";
+		    return false;
+		}
+		function hide_edit_form(){
+			$('#edit_form').submit();
+		}
+     </script>
+
+</body>
+</html>

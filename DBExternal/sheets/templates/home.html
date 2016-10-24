@@ -1,0 +1,86 @@
+<html>
+<head>
+      <!--Import Google Icon Font-->
+      <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <!--Import materialize.css-->
+      {% load staticfiles %}
+
+     
+     <link type="text/css" rel="stylesheet" href='{% static "sheets/css/materialize.min.css" %}' media="screen,projection"/>
+      <link type="text/css" rel="stylesheet" href='{% static "sheets/css/home_css.css" %}'  media="screen,projection"/>
+<!--Import jQuery before materialize.js-->
+      <script type="text/javascript" src='{% static "sheets/js/jquery-2.1.1.min.js" %}'></script>
+      <script type="text/javascript" src='{% static "sheets/js/materialize.min.js" %}'></script>
+     <script type="text/javascript" src='{% static "sheets/js/my_js.js" %}'></script>
+      <!--Let browser know website is optimized for mobile-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  </head>
+
+<body  onload='javascript:GenerateDocs(
+JSON.parse({{docs|safe}})
+,
+{{signs|safe}}
+,
+{{permissions|safe}}
+)' 
+>
+
+
+
+
+		<div class="parallax" width = "100%"><img src="{%static 'sheets/css/6.jpg' %}" alt="Unsplashed background img 1"></div>
+
+		<div class="logo"> 
+
+			<div class="header">
+				<div class="header_text">
+					<h1 class="header center text-lighten-2" style="color: #93C74B">Welcome to Sheetly</h1>
+        
+				 </div>
+				 <div class="row center" style="float: right; margin-top: 1%; margin-right:2%;">
+          			<a href="/signout/" id="download-button" class="btn-large waves-effect waves-light lighten-1">LOGOUT</a>
+        		</div>
+		</div>
+		<table width="100%" height="100%">
+			<tr>
+				<td width="20%" height="100%">
+					<div class="drawer">
+					 <div class="collection" style="margin-top: 30px">
+				        <a href="/profile/" class="collection-item" style="font-size: 20px; padding: 20px;">Profile</a>
+				        <a href="/home/my_docs/" class="collection-item" style="font-size: 20px;padding: 20px;">My Docs</a>
+				        <a href="/home/shared_docs/" class="collection-item" style="font-size: 20px;padding: 20px;">Shared Docs</a>
+				      </div>
+					 </div>
+				</td>
+				<td>
+					<div class="card">
+						<a class="btn-floating  waves-effect waves-light teal" id="opener" onclick="AddDocform()"><i class="material-icons">add</i></a>
+						
+				
+						<table id="doc_table">
+						</table>
+						
+					</div>
+				</td>
+			</tr>
+			</table>
+			<div id="lightbox" class="card">
+							<p style="text-align: center" class="sheetname"> Add Document</p>
+							<div class="row">
+							    <form class="col s12" method="POST" action="/home/docs/create_doc/">
+							    	{% csrf_token %}
+							      <div class="row">
+							        <div class="input-field col s12">
+							          <input placeholder="Document X" id="doc_name" name="doc_name" type="text" class="validate">
+							          <label for="doc_name">Document Name</label>
+							        </div>
+							      </div>
+							     	 <div align="center">
+							 		 	<button class="waves-effect waves-light btn">  Submit </button>
+							  		</div>
+							    </form>
+			  				</div>
+						</div>
+
+</body>
+</html>

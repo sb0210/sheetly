@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+{% if user.is_authenticated %}
+ <p> Yo {{ user.first_name }} </p>
+{% else %}
+<p> get lost</p>
+{% endif %} 
+<a href="/signout/"> logout</a>
+
+<form action="/home/docs/create_doc/" method="post">
+{% csrf_token %}
+<input name="doc_name" type="text">
+</form>
+
+<ul>
+{% for doc in docs %}
+<li>{{doc.doc_id}} {{doc.doc_name}} {{doc.created_on}} {{doc.created_by}} <a href={{doc.sign}}>{{doc.sign}}</a></li>
+{% endfor %}
+</ul>
+</body>
+</html>
